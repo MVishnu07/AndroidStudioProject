@@ -3,8 +3,12 @@ package ca.college.usa;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import java.util.ArrayList;
 
@@ -50,7 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
         mlistView.setAdapter(mAdapter);
 
+        Button playButton = findViewById(R.id.playBtn);
+        playButton.setOnClickListener(view -> {
+            openSecondActivity(view);
+        });
+
     }
+    public void openSecondActivity(View view) {
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivity(intent);
+    }
+
 
 
 }
