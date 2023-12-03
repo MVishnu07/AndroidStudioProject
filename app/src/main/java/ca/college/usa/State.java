@@ -21,7 +21,9 @@ public class State implements Comparable, Serializable {
     private String union    = null;    // entry date into union
     private String wikiUrl   = null;   // wiki URL of the state
 
-    private static Context ctx = null;   // required for JSON
+    private static Context ctx = null;  // required for JSON
+
+    private int flagResource;
 
     // Default Constructor
     public State() {
@@ -191,5 +193,15 @@ public class State implements Comparable, Serializable {
         }
 
         return json;
+    }
+
+    // Getter for the flag resource
+    public int getFlagResource() {
+        return flagResource;
+    }
+
+    // Setter for the flag resource
+    public void setFlagResource(int flagResource) {
+        this.flagResource = flagResource;
     }
 }

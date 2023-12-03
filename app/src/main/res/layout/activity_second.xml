@@ -6,15 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".SecondActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/grey"
+        app:title="Guess The State?"
+        app:titleTextColor="@color/white"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="#fb1818"
+        android:padding="8dp"
+        android:text="Counter: 0"
+        android:textColor="#030303"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/correctAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/counter"
+        android:layout_toStartOf="@id/counter"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/counter"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
     <ImageView
         android:id="@+id/imageViewFlag"
         android:layout_width="260dp"
         android:layout_height="161dp"
+        android:layout_marginStart="4dp"
         android:contentDescription="Flag"
-        app:layout_constraintEnd_toStartOf="@+id/textViewCapital"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/correctAnswer"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <TextView
@@ -24,29 +59,33 @@
         android:text="Capital Name"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewFlag"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewFlag"
         app:layout_constraintTop_toTopOf="@+id/imageViewFlag"
-        app:layout_constraintVertical_bias="0.467" />
+        app:layout_constraintVertical_bias="0.445" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="413dp"
         android:layout_height="34dp"
+        android:layout_marginTop="12dp"
         android:text="Options:"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewFlag" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewStates"
+    <ListView
+        android:id="@+id/listViewStates"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
-<!--        tools:listitem="@layout/state_list_item" />-->
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <!--        tools:listitem="@layout/state_list_item" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

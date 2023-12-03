@@ -2,10 +2,16 @@ package ca.college.usa;
 
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,15 +50,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Load the data needed for the adapter
-        mStatesList = State.readData(this, sFileName );
+//        mStatesList = State.readData(this, sFileName );
 
-        mlistView = findViewById(R.id.listView);
+//        mAdapter = new ArrayAdapter<>(this,
+//                                       android.R.layout.simple_list_item_1,
+//                                        mStatesList);
+//
+//        mlistView.setAdapter(mAdapter);
 
-        mAdapter = new ArrayAdapter<>(this,
-                                       android.R.layout.simple_list_item_1,
-                                        mStatesList);
-
-        mlistView.setAdapter(mAdapter);
+        Toolbar toolbarHome = findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbarHome);
+        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setTitle("Guess the State?");
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+        }
 
         Button playButton = findViewById(R.id.playBtn);
         playButton.setOnClickListener(view -> {
@@ -65,6 +76,29 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.infoBtn:
+                showGameInfoDialog();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showGameInfoDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Game Information")
+                .setMessage("Guess the U.S. State!\n\nTry to identify the U.S. state by its flag and capital city. Select the correct state from the list. Your score will increase for every correct guess and decrease for incorrect ones.")
+                .setPositiveButton("Got it!", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
 
 }
