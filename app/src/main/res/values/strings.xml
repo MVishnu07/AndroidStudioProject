@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Guess US States</string>
 
+    <string name="RecentScore">0</string>
+
+    <string name="Highscore">0</string>
+
+    <string name="LowScore">0</string>
 </resources>

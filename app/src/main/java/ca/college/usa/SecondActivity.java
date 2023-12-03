@@ -13,6 +13,7 @@ package ca.college.usa;
  * Date : December 3rd, 2023.
  */
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -88,7 +89,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.infoBtn:
+            case R.id.infoBtn2:
                 openWebPage(correctState.getWikiUrl());
                 return true;
             case R.id.nextBtn:
