@@ -15,22 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import java.util.ArrayList;
 
 
 /**
- * Full Name:
+ * Full Name: Karim Al Malki
  *
- * Student ID:
+ * Student ID: 041-073-798
  *
  * Course: CST3104
  *
- * Term:  Fall 2022
+ * Term:  Fall 2023
  *
  * Assignment: Team Project
  *
- * Date :
+ * Date : December 3rd, 2023.
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<State> mAdapter;
     private ListView mlistView;
 
+    private ImageView flagImageView;
+
+
     // Data Source for the Adapter
     private ArrayList<State> mStatesList;
 
@@ -48,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        flagImageView = findViewById(R.id.imageView2);
+
+        flagImageView.setImageResource(R.drawable.usamap);
 
         // Load the data needed for the adapter
 //        mStatesList = State.readData(this, sFileName );
@@ -86,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.infoBtn:
+            case R.id.infoId:
                 showGameInfoDialog();
             default:
                 return super.onOptionsItemSelected(item);
