@@ -30,15 +30,18 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.room.Entity;
+import androidx.room.Room;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class SecondActivity extends AppCompatActivity {
-
     private ImageView flagImageView;
     private TextView capitalTextView;
     private ListView statesListView;
@@ -53,11 +56,17 @@ public class SecondActivity extends AppCompatActivity {
 
 
 
+    CounterDAO mDAO;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        CounterDatabase db = Room.databaseBuilder(getApplicationContext(), CounterDatabase.class, "Chat-database").build();
+        mDAO = db.cDAO();
 
         flagImageView = findViewById(R.id.imageViewFlag);
         capitalTextView = findViewById(R.id.textViewCapital);
@@ -96,6 +105,7 @@ public class SecondActivity extends AppCompatActivity {
                 resetGame();
                 return true;
             case R.id.endGameBtn:
+
                 endGame();
                 return true;
             default:
@@ -118,10 +128,15 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     private void endGame() {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMMM-yy hh-mm a");
+        String currentTime = sdf.format(new Date());
         new AlertDialog.Builder(this)
                 .setTitle("End Game")
                 .setMessage("Your score is: " + counter + "\nDo you want to exit the game?")
                 .setPositiveButton("Yes", (dialog, which) -> {
+                    mDAO.InsertCounter(counter);
+                    mDAO.InsertDate(currentTime);
+
                     finish();
                 })
                 .setNegativeButton("No", (dialog, which) -> {
