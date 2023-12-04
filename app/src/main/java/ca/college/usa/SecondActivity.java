@@ -30,7 +30,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.room.Room;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -52,6 +51,7 @@ public class SecondActivity extends AppCompatActivity {
     private TextView stateNameTextView;
     private int counter = 0;
     private boolean isCorrectAnswerFound = false;
+    private String wikiUrl;
 
     private State correctState;
     CounterDAO mDAO;
@@ -95,7 +95,7 @@ public class SecondActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.infoBtn:
-                openWebPage(correctState.getWikiUrl());
+                openWebPage(wikiUrl);
                 return true;
             case R.id.nextBtn:
                 resetGame();
@@ -123,10 +123,10 @@ public class SecondActivity extends AppCompatActivity {
                 intent.setData(Uri.parse(url));
                 startActivity(intent);
             } catch (Exception e) {
-                Toast.makeText(this, "Cannot open the webpage", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error opening webpage: " + url, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Invalid URL", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid URL: " + url, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -143,17 +143,13 @@ public class SecondActivity extends AppCompatActivity {
                     executor.execute(() -> {
                         mDAO.InsertCounter(counterScore);
                         executor.shutdown();
-
                         runOnUiThread(this::finish);
-
                     });
                     finish();
                 })
                 .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show();
     }
-
-
 
     private void readStatesData() {
         try {
@@ -183,6 +179,7 @@ public class SecondActivity extends AppCompatActivity {
     private void displayRandomState() {
         int index = random.nextInt(statesList.size());
         State randomState = statesList.get(index);
+        wikiUrl = randomState.getWikiUrl();
         correctState = randomState;
         flagImageView.setImageResource(randomState.getFlagResource());
         capitalTextView.setText(randomState.getCapital());
