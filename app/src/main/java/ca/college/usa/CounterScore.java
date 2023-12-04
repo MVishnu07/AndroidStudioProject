@@ -6,10 +6,7 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class CounterScore {
-//    @ColumnInfo(name="counter")
     protected int counter;
-
-//    @ColumnInfo(name="date")
     protected String date;
 
     @PrimaryKey(autoGenerate = true)
