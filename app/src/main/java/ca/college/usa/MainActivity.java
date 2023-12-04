@@ -13,13 +13,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         lowestScore = findViewById(R.id.LowestScoreNum);
         recentScore = findViewById(R.id.RecentScoreNum);
 
-        loadScores();
-
         Toolbar toolbarHome = findViewById(R.id.toolbar1);
         setSupportActionBar(toolbarHome);
         if (getSupportActionBar() != null) {
@@ -69,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(view -> {
             openSecondActivity(view);
         });
+        loadScores();
 
     }
 
@@ -78,19 +74,19 @@ public class MainActivity extends AppCompatActivity {
             CounterDatabase db = CounterDatabase.getDatabase(getApplicationContext());
             CounterDAO dao = db.cDAO();
 
+            CounterScore recentScoreObj = dao.getMostRecentScore();
             CounterScore highest = dao.getHighestScoreWithDate();
             CounterScore lowest = dao.getLowestScoreWithDate();
-            CounterScore recentScoreObj = dao.getMostRecentScore();
 
             runOnUiThread(() -> {
+                if (recentScoreObj != null) {
+                    recentScore.setText(recentScoreObj.getCounter() + " on " + recentScoreObj.getDate());
+                }
                 if (highest != null) {
                     highestScore.setText(highest.getCounter() + " on " + highest.getDate());
                 }
                 if (lowest != null) {
                     lowestScore.setText(lowest.getCounter() + " on " + lowest.getDate());
-                }
-                if (recentScoreObj != null) {
-                    recentScore.setText(recentScoreObj.getCounter() + " on " + recentScoreObj.getDate());
                 }
             });
         });

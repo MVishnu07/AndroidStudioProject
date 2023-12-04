@@ -117,7 +117,7 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     private void openWebPage(String url) {
-        if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
+        if (url != null && (url.startsWith("https://"))) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
@@ -136,14 +136,14 @@ public class SecondActivity extends AppCompatActivity {
         CounterScore counterScore = new CounterScore(counter, currentTime);
 
         new AlertDialog.Builder(this)
-                .setTitle("End Game")
+                .setTitle("End Game!!")
                 .setMessage("Your score is: " + counter + "\nDo you want to exit the game?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     ExecutorService executor = Executors.newSingleThreadExecutor();
                     executor.execute(() -> {
                         mDAO.InsertCounter(counterScore);
-                        executor.shutdown();
                         runOnUiThread(this::finish);
+                        executor.shutdown();
                     });
                     finish();
                 })
@@ -167,6 +167,7 @@ public class SecondActivity extends AppCompatActivity {
                 State state = new State();
                 state.setName(stateJson.getString("name"));
                 state.setCapital(stateJson.getString("capital"));
+                state.setWikiUrl(stateJson.getString("wiki"));
                 int flagId = getResources().getIdentifier(stateJson.getString("code").toLowerCase(), "drawable", getPackageName());
                 state.setFlagResource(flagId);
                 statesList.add(state);
