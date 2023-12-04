@@ -13,7 +13,6 @@ package ca.college.usa;
  * Date : December 3rd, 2023.
  */
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -26,11 +25,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.room.Entity;
 import androidx.room.Room;
 
 import org.json.JSONArray;
@@ -40,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SecondActivity extends AppCompatActivity {
     private ImageView flagImageView;
@@ -53,19 +54,14 @@ public class SecondActivity extends AppCompatActivity {
     private boolean isCorrectAnswerFound = false;
 
     private State correctState;
-
-
-
     CounterDAO mDAO;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        CounterDatabase db = Room.databaseBuilder(getApplicationContext(), CounterDatabase.class, "Chat-database").build();
+        CounterDatabase db = CounterDatabase.getDatabase(getApplicationContext());
         mDAO = db.cDAO();
 
         flagImageView = findViewById(R.id.imageViewFlag);
@@ -98,7 +94,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.infoBtn2:
+            case R.id.infoBtn:
                 openWebPage(correctState.getWikiUrl());
                 return true;
             case R.id.nextBtn:
@@ -122,28 +118,38 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     private void openWebPage(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        startActivity(intent);
+        if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(this, "Cannot open the webpage", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Invalid URL", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void endGame() {
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMMM-yy hh-mm a");
         String currentTime = sdf.format(new Date());
+        CounterScore counterScore = new CounterScore(counter, currentTime);
+
         new AlertDialog.Builder(this)
                 .setTitle("End Game")
                 .setMessage("Your score is: " + counter + "\nDo you want to exit the game?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    mDAO.InsertCounter(counter);
-                    mDAO.InsertDate(currentTime);
-
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> {
+                        mDAO.InsertCounter(counterScore);
+                    });
                     finish();
                 })
-                .setNegativeButton("No", (dialog, which) -> {
-                    dialog.dismiss();
-                })
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show();
     }
+
 
     private void parseStatesData() {
         try {

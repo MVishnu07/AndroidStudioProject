@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -37,15 +42,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private static final String sFileName = "usa.json";
-
     // ListView <---> adapter <---> data
     private ArrayAdapter<State> mAdapter;
     private ListView mlistView;
-
     private ImageView flagImageView;
 
+    private TextView highestScore, lowestScore, recentScore;
 
-    // Data Source for the Adapter
     private ArrayList<State> mStatesList;
 
     @Override
@@ -56,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
         flagImageView = findViewById(R.id.imageView2);
 
         flagImageView.setImageResource(R.drawable.usamap);
+
+        highestScore = findViewById(R.id.HighestScoreNum);
+        lowestScore = findViewById(R.id.LowestScoreNum);
+        recentScore = findViewById(R.id.RecentScoreNum);
+
+        loadScores();
 
         // Load the data needed for the adapter
 //        mStatesList = State.readData(this, sFileName );
@@ -79,6 +88,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void loadScores() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            CounterDatabase db = CounterDatabase.getDatabase(getApplicationContext());
+            CounterDAO dao = db.cDAO();
+
+            CounterScore highest = dao.getHighestScoreWithDate();
+            CounterScore lowest = dao.getLowestScoreWithDate();
+            CounterScore recentScoreObj = dao.getMostRecentScore();
+
+            runOnUiThread(() -> {
+                if (highest != null) {
+                    highestScore.setText(highest.getCounter() + " on " + highest.getDate());
+                }
+                if (lowest != null) {
+                    lowestScore.setText(lowest.getCounter() + " on " + lowest.getDate());
+                }
+                if (recentScoreObj != null) {
+                    recentScore.setText(recentScoreObj.getCounter() + " on " + recentScoreObj.getDate());
+                }
+            });
+        });
+        executor.shutdown();
+    }
+
     public void openSecondActivity(View view) {
         Intent intent = new Intent(this, SecondActivity.class);
         startActivity(intent);
