@@ -10,15 +10,6 @@ public interface CounterDAO {
     @Insert
     long InsertCounter(CounterScore counter);
 
-    @Query("SELECT MAX(counter) FROM CounterScore")
-    int SelectLargest();
-
-    @Query("SELECT MIN(counter) FROM CounterScore")
-    int SelectSmallest();
-
-    @Query("SELECT MAX(id) FROM CounterScore")
-    int SelectRecent();
-
     @Query("SELECT * FROM CounterScore WHERE counter = (SELECT MAX(counter) FROM CounterScore) LIMIT 1")
     CounterScore getHighestScoreWithDate();
 

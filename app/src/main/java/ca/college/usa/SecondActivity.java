@@ -80,7 +80,7 @@ public class SecondActivity extends AppCompatActivity {
         counterTextView.setBackgroundColor(Color.TRANSPARENT);
 
 
-        parseStatesData();
+        readStatesData();
         displayRandomState();
         setupListView();
     }
@@ -101,7 +101,6 @@ public class SecondActivity extends AppCompatActivity {
                 resetGame();
                 return true;
             case R.id.endGameBtn:
-
                 endGame();
                 return true;
             default:
@@ -143,6 +142,10 @@ public class SecondActivity extends AppCompatActivity {
                     ExecutorService executor = Executors.newSingleThreadExecutor();
                     executor.execute(() -> {
                         mDAO.InsertCounter(counterScore);
+                        executor.shutdown();
+
+                        runOnUiThread(this::finish);
+
                     });
                     finish();
                 })
@@ -151,7 +154,8 @@ public class SecondActivity extends AppCompatActivity {
     }
 
 
-    private void parseStatesData() {
+
+    private void readStatesData() {
         try {
             InputStream is = getAssets().open("usa.json");
             int size = is.available();

@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,15 +40,9 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String sFileName = "usa.json";
-    // ListView <---> adapter <---> data
-    private ArrayAdapter<State> mAdapter;
-    private ListView mlistView;
     private ImageView flagImageView;
 
     private TextView highestScore, lowestScore, recentScore;
-
-    private ArrayList<State> mStatesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         loadScores();
 
-        // Load the data needed for the adapter
-//        mStatesList = State.readData(this, sFileName );
-
-//        mAdapter = new ArrayAdapter<>(this,
-//                                       android.R.layout.simple_list_item_1,
-//                                        mStatesList);
-//
-//        mlistView.setAdapter(mAdapter);
-
         Toolbar toolbarHome = findViewById(R.id.toolbar1);
         setSupportActionBar(toolbarHome);
         if (getSupportActionBar() != null) {
-//            getSupportActionBar().setTitle("Guess the State?");
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
         }
 
@@ -89,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadScores() {
+    public void loadScores() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             CounterDatabase db = CounterDatabase.getDatabase(getApplicationContext());
@@ -131,6 +114,10 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.infoId:
                 showGameInfoDialog();
+                return true;
+            case R.id.versionId:
+                showAuthorInfo();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -139,9 +126,23 @@ public class MainActivity extends AppCompatActivity {
     private void showGameInfoDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Game Information")
-                .setMessage("Guess the U.S. State!\n\nTry to identify the U.S. state by its flag and capital city. Select the correct state from the list. Your score will increase for every correct guess and decrease for incorrect ones.")
+                .setMessage("Guess the U.S. State!\n\nTry to identify the U.S. state by its flag and capital city. Select the correct state from the list, your score will increase by 5 points for every correct guess and decrease by 3 points for incorrect ones.\n Good Luck!!")
                 .setPositiveButton("Got it!", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+    private void showAuthorInfo() {
+        new AlertDialog.Builder(this)
+                .setTitle("Author Information")
+                .setMessage("Guess the State Game!!\n\nVersion 1 of the game created by Vishnu Malkapuram and Karim Al Malki")
+                .setPositiveButton("Hooray!!", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadScores();
     }
 
 }
