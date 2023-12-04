@@ -164,6 +164,8 @@ public class State implements Comparable, Serializable {
                 e.union     = states.getJSONObject(i).getString("union");
                 e.wikiUrl   = states.getJSONObject(i).getString("wiki");
 
+                e.setWikiUrl(e.wikiUrl);
+
                 mylist.add(e);
             }
         } catch (JSONException e) {
