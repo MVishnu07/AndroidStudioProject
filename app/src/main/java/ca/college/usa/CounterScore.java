@@ -6,6 +6,21 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class CounterScore {
+//    @ColumnInfo(name="counter")
+    protected int counter;
+
+//    @ColumnInfo(name="date")
+    protected String date;
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name="id")
+    protected Long id;
+
+    public CounterScore(int counter, String date) {
+        this.counter = counter;
+        this.date = date;
+    }
+
     public int getCounter() {
         return counter;
     }
@@ -17,17 +32,6 @@ public class CounterScore {
     public Long getId() {
         return id;
     }
-
-    @ColumnInfo(name="counter")
-    protected int counter;
-
-    @ColumnInfo(name="date")
-    protected String date;
-
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name="id")
-    protected Long id;
-
 
     public void setCounter(int counter) {
         this.counter = counter;

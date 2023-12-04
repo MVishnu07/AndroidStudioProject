@@ -6,18 +6,25 @@ import androidx.room.Query;
 
 @Dao
 public interface CounterDAO {
-    @Insert
-    void InsertCounter(int counter);
 
     @Insert
-    void InsertDate(String date);
+    long InsertCounter(CounterScore counter);
 
     @Query("SELECT MAX(counter) FROM CounterScore")
-    int SelectLargerst();
+    int SelectLargest();
 
     @Query("SELECT MIN(counter) FROM CounterScore")
     int SelectSmallest();
 
     @Query("SELECT MAX(id) FROM CounterScore")
-    int SelectLatest();
+    int SelectRecent();
+
+    @Query("SELECT * FROM CounterScore WHERE counter = (SELECT MAX(counter) FROM CounterScore) LIMIT 1")
+    CounterScore getHighestScoreWithDate();
+
+    @Query("SELECT * FROM CounterScore WHERE counter = (SELECT MIN(counter) FROM CounterScore) LIMIT 1")
+    CounterScore getLowestScoreWithDate();
+
+    @Query("SELECT * FROM CounterScore ORDER BY date DESC LIMIT 1")
+    CounterScore getMostRecentScore();
 }
